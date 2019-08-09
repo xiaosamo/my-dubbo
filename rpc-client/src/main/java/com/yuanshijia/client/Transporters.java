@@ -1,7 +1,5 @@
 package com.yuanshijia.client;
 
-import com.yuanshijia.ClientHandler;
-import com.yuanshijia.common.RpcCallbackFuture;
 import com.yuanshijia.common.RpcRequest;
 import com.yuanshijia.common.RpcResponse;
 import com.yuanshijia.NettyClient;
@@ -14,7 +12,7 @@ import java.util.concurrent.TimeoutException;
  * @description
  */
 public class Transporters {
-    public static RpcResponse send(RpcRequest request) throws InterruptedException, TimeoutException {
+    public static RpcResponse send(RpcRequest request) {
         NettyClient nettyClient = new NettyClient("127.0.0.1", 9090);
         nettyClient.connect();
 

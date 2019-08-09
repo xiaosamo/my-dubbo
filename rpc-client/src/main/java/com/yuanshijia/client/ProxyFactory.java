@@ -6,7 +6,7 @@ import java.lang.reflect.Proxy;
  * @author yuanshijia
  * @date 2019-08-08
  * @description
- * 代理工厂类
+ * 代理类
  */
 public class ProxyFactory {
     /**

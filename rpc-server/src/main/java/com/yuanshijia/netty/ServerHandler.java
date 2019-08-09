@@ -6,16 +6,9 @@ import com.yuanshijia.common.RpcResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.cglib.reflect.FastClass;
-import net.sf.cglib.reflect.FastMethod;
 import org.reflections.Reflections;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,15 +21,13 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class ServerHandler extends SimpleChannelInboundHandler<RpcRequest>{
 
-    private ApplicationContext applicationContext;
 
     public static Map<String, Object> serviceMap = new ConcurrentHashMap<>();
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcRequest request) throws Exception {
 
-        System.out.println("server get request" + request);
-        
+        log.info("server get request:{}", request);
         RpcResponse response = new RpcResponse();
         response.setRequestId(request.getRequestId());
         try {
@@ -60,18 +51,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<RpcRequest>{
      */
     private Object handler(RpcRequest request) throws Throwable {
         // 获取要调用的service
-        Class<?> clazz = Class.forName(request.getClassName());
-
-//        ServiceLoader<?> loader = ServiceLoader.load(clazz);
-//        Iterator<?> iterator = loader.iterator();
-//        while (iterator.hasNext()) {
-//            System.out.println(iterator.next());
-//        }
-//        clazz.getDeclaredClasses()[0].get;
-
-        
-//        Object serverBean = clazz.getDeclaredConstructor().newInstance();
-//        Object serviceBean = applicationContext.getBean(clazz);
+        Class<?> serviceClass = Class.forName(request.getClassName());
 
         Reflections reflections = new Reflections("com.yuanshijia");
         // 获取 @RpcInterfac 标注的接口
@@ -88,22 +68,11 @@ public class ServerHandler extends SimpleChannelInboundHandler<RpcRequest>{
         Class<?>[] parameterTypes = request.getParameterTypes();
         Object[] parameters = request.getParameters();
 
-        FastClass fastClass = FastClass.create(serviceBean.getClass());
-        FastMethod fastMethod = fastClass.getMethod(methodName, parameterTypes);
-
-
-        // 根本思路还是获取类名和方法名，利用反射实现调用
-//        FastClass fastClass = FastClass.create(serviceBean.getClass());
-//        FastMethod fastMethod = fastClass.getMethod(methodName, parameterTypes);
+        Method method = serviceClass.getMethod(methodName, parameterTypes);
+        method.setAccessible(true);
 
         // 通过反射，调用目标service的方法，并传入参数
-        return fastMethod.invoke(serviceBean, parameters);
+        return method.invoke(serviceBean, parameters);
     }
 
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.error(">>>>>>>>>>> child-rpc provider netty server caught exception", cause);
-        ctx.close();
-    }
 }

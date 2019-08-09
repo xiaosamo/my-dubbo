@@ -16,15 +16,17 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * @author yuanshijia
  * @date 2019-08-08
  * @description
  */
+@Slf4j
 public class NettyServer {
 
     private ChannelFuture channelFuture;
@@ -62,22 +64,10 @@ public class NettyServer {
 
 
         this.channelFuture = serverBootstrap.bind(port).sync();
-        System.out.println("Server startup...");
+        log.info("Server startup...");
     }
 
     public static void main(String[] args) throws InterruptedException {
         new NettyServer().start(9090);
-
-        //创建Timer
-        final Timer timer = new Timer();
-        //设定定时任务
-        timer.schedule(new TimerTask() {
-            //定时任务执行方法
-            @Override
-            public void run() {
-                System.out.println("定时任务...");
-
-            }
-        }, 5000);
     }
 }
