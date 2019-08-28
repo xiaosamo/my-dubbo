@@ -9,6 +9,4 @@ import com.yuanshijia.common.RpcInterface;
  */
 public interface HelloService {
     String hello(String name);
-
-
 }

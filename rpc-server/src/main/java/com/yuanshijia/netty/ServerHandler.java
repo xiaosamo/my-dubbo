@@ -5,7 +5,6 @@ import com.yuanshijia.common.RpcRequest;
 import com.yuanshijia.common.RpcResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Method;
@@ -18,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2019-08-08
  * @description
  */
-@Slf4j
 public class ServerHandler extends SimpleChannelInboundHandler<RpcRequest>{
 
 
@@ -27,13 +25,13 @@ public class ServerHandler extends SimpleChannelInboundHandler<RpcRequest>{
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcRequest request) throws Exception {
 
-        log.info("server get request:{}", request);
+        System.out.println("server get request:"+ request);
         RpcResponse response = new RpcResponse();
         response.setRequestId(request.getRequestId());
         try {
             // 收到请求后开始处理请求
             Object result = handler(request);
-            log.info("service 调用成功:{}", result);
+            System.out.println("service 调用成功:" + result);
             response.setResult(result);
         } catch (Throwable throwable) {
             //  如果有异常，设置到response中

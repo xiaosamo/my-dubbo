@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2019-08-08
  * @description
  */
-@Slf4j
 public class ClientHandler extends SimpleChannelInboundHandler<RpcResponse> {
 
     public static final Object lock = new Object();
@@ -22,7 +21,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<RpcResponse> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcResponse response) throws Exception {
-        log.info("response=" + response);
+        System.out.println("response=" + response);
         ClientHandler.response = response;
         synchronized (lock) {
             // 释放

@@ -2,7 +2,6 @@ package com.yuanshijia.service;
 
 import com.yuanshijia.common.RpcInterface;
 import com.yuanshijia.common.api.HelloService;
-import org.springframework.stereotype.Service;
 
 /**
  * @author yuanshijia

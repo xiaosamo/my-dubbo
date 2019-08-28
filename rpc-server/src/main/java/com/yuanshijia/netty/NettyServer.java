@@ -16,9 +16,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -26,13 +23,13 @@ import org.slf4j.LoggerFactory;
  * @date 2019-08-08
  * @description
  */
-@Slf4j
 public class NettyServer {
 
     private ChannelFuture channelFuture;
 
-    public NettyServer(){
+    public static final int port = 8990;
 
+    public NettyServer(){
     }
 
     public void start(int port) throws InterruptedException {
@@ -49,11 +46,10 @@ public class NettyServer {
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         ChannelPipeline pipeline = socketChannel.pipeline();
 
-                        // 处理 tcp 请求中粘包的 coder
+                        // 处理 tcp 请求中粘包的
                         pipeline.addLast(new LengthFieldBasedFrameDecoder(65535, 0, 4));
 
-                        // protocol 中实现的 序列化和反序列化 coder
-//                        socketChannel.pipeline().addLast(new RpcCodec(RpcResponse.class, new JsonSerialization()));
+                        // 序列化和反序列化
                         pipeline.addLast(new RpcDecoder(RpcRequest.class,new JsonSerialization()));
                         pipeline.addLast(new RpcEncoder(RpcResponse.class,new JsonSerialization()));
 
@@ -64,10 +60,10 @@ public class NettyServer {
 
 
         this.channelFuture = serverBootstrap.bind(port).sync();
-        log.info("Server startup...");
     }
 
     public static void main(String[] args) throws InterruptedException {
-        new NettyServer().start(9090);
+        new NettyServer().start(port);
+        System.err.println("Server startup, port:" + port);
     }
 }

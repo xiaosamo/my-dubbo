@@ -15,21 +15,11 @@ public class JsonSerialization implements Serialization {
 
     @Override
     public <T> byte[] serialize(T obj) {
-        try {
-            return JSON.toJSONBytes(obj);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new byte[0];
+        return JSON.toJSONBytes(obj);
     }
 
     @Override
     public <T> T doSerialize(byte[] data, Class<T> clazz) {
-        try {
-            return JSON.parseObject(data, clazz);
-        }   catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return JSON.parseObject(data, clazz);
     }
 }
