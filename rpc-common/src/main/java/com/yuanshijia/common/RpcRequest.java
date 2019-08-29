@@ -1,7 +1,6 @@
 package com.yuanshijia.common;
 
 import lombok.Data;
-import lombok.ToString;
 
 /**
  * @author yuanshijia
@@ -10,7 +9,6 @@ import lombok.ToString;
  * 方法调用对象实体
  */
 @Data
-@ToString
 public class RpcRequest {
     /**
      * 调用编号
